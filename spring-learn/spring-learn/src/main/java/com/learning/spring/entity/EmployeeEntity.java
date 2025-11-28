@@ -1,10 +1,7 @@
 package com.learning.spring.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 
@@ -14,6 +11,7 @@ import java.time.LocalDate;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class EmployeeEntity {
 
     @Id
@@ -24,7 +22,11 @@ public class EmployeeEntity {
     private String name;
 
     private Integer age;
+
+    @Column(unique = true)
     private String email;
+
     private LocalDate dateOfJoining;
-    private boolean isActive;
+
+    private boolean statusActive;
 }
