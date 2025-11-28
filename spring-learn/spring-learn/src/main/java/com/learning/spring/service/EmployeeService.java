@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -25,9 +26,9 @@ public class EmployeeService {
     }
 
 
-    public EmployeeDTO getEmployeeById(Long id) {
-        EmployeeEntity emp = employeeRepository.findById(id).orElse(null);
-        return modelMapper.map(emp, EmployeeDTO.class);
+    public Optional<EmployeeDTO> getEmployeeById(Long id) {
+        Optional<EmployeeEntity> emp = employeeRepository.findById(id);
+        return emp.map(entity-> modelMapper.map(entity, EmployeeDTO.class));
     }
 
     public List<EmployeeDTO> getAllEmployees() {
