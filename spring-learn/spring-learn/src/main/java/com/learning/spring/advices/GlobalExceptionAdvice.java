@@ -11,51 +11,50 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.util.HashMap;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 @RestControllerAdvice
 public class GlobalExceptionAdvice {
 
 
     @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<ApiError> handleResourceNotFound(ResourceNotFoundException resourceNotFoundException){
+    public ResponseEntity<ApiResponse<?>> handleResourceNotFound(ResourceNotFoundException resourceNotFoundException){
         ApiError apiError = ApiError.builder()
                 .status(HttpStatus.NOT_FOUND)
                 .message(resourceNotFoundException.getMessage())
                 .build();
-        return new ResponseEntity<>(apiError, HttpStatus.NOT_FOUND);
+        return buildErrorResponseEntity(apiError);
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ApiError> handleResourceNotFound(Exception exception){
+    public ResponseEntity<ApiResponse<?>> handleInternalServerError(Exception exception) {
         ApiError apiError = ApiError.builder()
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .message(exception.getMessage())
                 .build();
-        return new ResponseEntity<>(apiError, HttpStatus.NOT_FOUND);
+        return buildErrorResponseEntity(apiError);
     }
 
-    //output of all exceptions using list
-    /*@ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ApiError> handleMethodArgumentNotValidException(MethodArgumentNotValidException methodValidException){
-        List<String> errors = methodValidException
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ApiResponse<?>> handleInputValidationErrors(MethodArgumentNotValidException exception) {
+        List<String> errors = exception
                 .getBindingResult()
                 .getAllErrors()
                 .stream()
-                .map(error -> error.getDefaultMessage() )
-                .toList();
+                .map(error -> error.getDefaultMessage())
+                .collect(Collectors.toList());
 
         ApiError apiError = ApiError.builder()
-                .message("Input validation failed")
                 .status(HttpStatus.BAD_REQUEST)
+                .message("Input validation failed")
                 .subErrors(errors)
                 .build();
-
-        return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
-    }*/
+        return buildErrorResponseEntity(apiError);
+    }
 
     //output of all exceptions using hashmap
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ApiError> handleMethodArgumentNotValidException(MethodArgumentNotValidException methodValidException){
+    /*@ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ApiResponse<?>> handleMethodArgumentNotValidException(MethodArgumentNotValidException methodValidException){
 
         HashMap<String, String> errorMap = new HashMap<>();
                 methodValidException
@@ -73,7 +72,13 @@ public class GlobalExceptionAdvice {
                 .hashMap(errorMap)
                 .build();
 
-        return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
+        return buildErrorResponseEntity(apiError);
+    }
+
+     */
+
+    private ResponseEntity<ApiResponse<?>> buildErrorResponseEntity(ApiError apiError) {
+        return new ResponseEntity<>(new ApiResponse<>(apiError), apiError.getStatus());
     }
 
 }
