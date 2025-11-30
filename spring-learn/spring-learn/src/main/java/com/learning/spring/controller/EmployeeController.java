@@ -2,12 +2,11 @@ package com.learning.spring.controller;
 
 import com.learning.spring.dto.EmployeeDTO;
 import com.learning.spring.service.EmployeeService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -35,12 +34,12 @@ public class EmployeeController {
     }
 
     @PostMapping
-    public ResponseEntity<EmployeeDTO> createEmployee(@RequestBody EmployeeDTO employeeDTO){
+    public ResponseEntity<EmployeeDTO> createEmployee(@Valid  @RequestBody EmployeeDTO employeeDTO){
         return new ResponseEntity<>(employeeService.createEmployee(employeeDTO) , HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<EmployeeDTO> updateEmployeesById(@PathVariable Long id , @RequestBody EmployeeDTO employeeDTO){
+    public ResponseEntity<EmployeeDTO> updateEmployeesById(@PathVariable Long id , @RequestBody @Valid EmployeeDTO employeeDTO){
         return ResponseEntity.ok(employeeService.updateEmployeesById(id,employeeDTO));
     }
 
@@ -57,19 +56,6 @@ public class EmployeeController {
         return employeeDTO ==null ? ResponseEntity.notFound().build() :  ResponseEntity.ok(employeeDTO);
 
     }
-
-
-
-    /*this is for understanding
-    @GetMapping
-    public String getAll(@RequestParam(required = false, name = "inputAge") Integer age , here in url inputAge should be given
-                              @RequestParam(required = false) String sortBy){
-        return ("age : " + age + " sortBy: " + sortBy);
-    }
-
-      //path variable -- parameter is essential for us
-    //request param -- optional parameter
-     */
 
 
 
