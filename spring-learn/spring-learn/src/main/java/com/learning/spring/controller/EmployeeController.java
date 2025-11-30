@@ -1,14 +1,17 @@
 package com.learning.spring.controller;
 
 import com.learning.spring.dto.EmployeeDTO;
+import com.learning.spring.exceptions.ResourceNotFoundException;
 import com.learning.spring.service.EmployeeService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.nio.file.ReadOnlyFileSystemException;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @RequestMapping("/employees")
@@ -21,11 +24,11 @@ public class EmployeeController {
         this.employeeService = employeeService;
     }
 
-
     @GetMapping("/{id}")
     public ResponseEntity<EmployeeDTO> getEmployeeByID(@PathVariable Long id) {
         Optional<EmployeeDTO> employeeDTO = employeeService.getEmployeeById(id);
-        return employeeDTO.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+        return employeeDTO.map(ResponseEntity::ok)
+                .orElseThrow(()-> new ResourceNotFoundException("Employee not found with id : " + id));
     }
 
     @GetMapping

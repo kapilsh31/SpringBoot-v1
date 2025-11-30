@@ -2,15 +2,18 @@ package com.learning.spring.service;
 
 import com.learning.spring.dto.EmployeeDTO;
 import com.learning.spring.entity.EmployeeEntity;
+import com.learning.spring.exceptions.ResourceNotFoundException;
 import com.learning.spring.repository.EmployeeRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.util.ReflectionUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Slf4j
@@ -65,11 +68,13 @@ public class EmployeeService {
         return employeeRepository.existsByEmail(email);
     }
 
-    private boolean existsById(Long id) {
-        return employeeRepository.existsById(id);
+    private void existsById(Long id) {
+        boolean exists = employeeRepository.existsById(id);
+        if(!exists) throw new ResourceNotFoundException("Employee not found with id : " + id);
     }
 
     public EmployeeDTO updateEmployeesById(Long id, EmployeeDTO employeeDTO) {
+        existsById(id);
         EmployeeEntity employeeEntity = modelMapper.map(employeeDTO, EmployeeEntity.class);
         employeeEntity.setId(id);
         EmployeeEntity savedEntity = employeeRepository.save(employeeEntity);
@@ -88,13 +93,9 @@ public class EmployeeService {
     }
 
     public boolean deleteEmpById(Long id) {
-        boolean chk = existsById(id);
-        if(chk) {
-            employeeRepository.deleteById(id);
-            return true;
-        }
-
-        return false;
+        existsById(id);
+        employeeRepository.deleteById(id);
+        return true;
     }
 
     public EmployeeDTO updatePartialEmployeeById(Long employeeId, Map<String, Object> updates) {
