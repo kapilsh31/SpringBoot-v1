@@ -33,5 +33,15 @@ public class MyNotes {
     in which we need to our created interface and field type
     then on field we need to give @EmployeeRoleValidation -- interface name on validated field
 
+
+    ---------------------------------- JPA/hibernate
+
+    JPA -- is a specification as how object and relations should take place
+    hibernate -- is a implementation of JPA specification
+
+    normally we do not need to write any specific queries just give correct format
+    but if we need to write incase
+    use @Query -----> but in this we need to give table name same as java entity and everything is case-sensitive
+
      */
 }

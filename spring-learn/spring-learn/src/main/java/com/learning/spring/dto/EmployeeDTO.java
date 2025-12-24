@@ -26,11 +26,16 @@ public class EmployeeDTO {
     @Email(message = "{EMAIL_VALID}")
     private String email;
 
+    @NotBlank(message = "Phone is required")
+    @Pattern(regexp = "^\\+?\\d{10,15}$", message = "Invalid phone number")
+    private String phone;
+
     @PastOrPresent(message = "{DOJ_VALID}")
     private LocalDate dateOfJoining;
 
     @NotNull(message = "{SALARY_NULL}")
     @Digits(integer = 7, fraction = 2, message = "{SALARY_VALID}")
+    @DecimalMin(value = "0.0", inclusive = false, message = "Salary must be greater than 0")
     private Double salary;
 
     private boolean statusActive;

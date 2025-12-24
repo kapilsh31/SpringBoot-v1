@@ -2,7 +2,9 @@ package com.learning.spring.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Entity
@@ -15,20 +17,29 @@ import java.time.LocalDate;
 public class EmployeeEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(length = 50)
+    @Column(nullable = false, length = 50)
     private String name;
+
+    @Column(nullable = false, unique = true)
+    private String email;
+
+    @Column(nullable = false, length = 20)
+    private String phone;
 
     private Integer age;
 
-    @Column(unique = true)
-    private String email;
-
+    @Column(nullable = false)
     private LocalDate dateOfJoining;
 
-    private Double salary;
+    @Column(nullable = false)
+    private BigDecimal salary;
 
     private boolean statusActive;
+
+    @CreationTimestamp
+    @Column(nullable = false)
+    private LocalDate creationDate;
 }

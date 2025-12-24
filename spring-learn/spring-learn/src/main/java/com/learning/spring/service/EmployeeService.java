@@ -6,15 +6,12 @@ import com.learning.spring.exceptions.ResourceNotFoundException;
 import com.learning.spring.repository.EmployeeRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.util.ReflectionUtils;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.lang.reflect.Field;
-import java.util.List;
-import java.util.Map;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -108,4 +105,64 @@ public class EmployeeService {
         });
         return modelMapper.map(employeeRepository.save(employeeEntity), EmployeeDTO.class);
     }
+
+    public EmployeeDTO getEmployeeByNameAndEmail(String name, String email) {
+        EmployeeEntity employeeEntity = employeeRepository.getEmployeeByNameAndEmail(name, email);
+        return modelMapper.map(employeeEntity , EmployeeDTO.class);
+    }
+
+    public List<EmployeeDTO> getEmployeeByNameOrAge(String name, Integer age) {
+        List<EmployeeEntity> employeeEntities = employeeRepository.getEmployeeByNameOrAge(name,age);
+        if(!employeeEntities.isEmpty()) {
+            return employeeEntities.stream()
+                    .map(e -> modelMapper.map(e, EmployeeDTO.class))
+                    .toList();
+        }
+
+        return new ArrayList<EmployeeDTO>();
+    }
+
+    public List<EmployeeDTO> getEmployeesSorted(String sortBy, String direction) {
+
+        validateValidField(sortBy);
+
+        Sort.Direction direction1 = direction.equalsIgnoreCase("asc") ? Sort.Direction.ASC : Sort.Direction.DESC;
+
+        List<EmployeeEntity> employeeEntities = employeeRepository.findAll(Sort.by(direction1,sortBy));
+        if(!employeeEntities.isEmpty()) {
+            return employeeEntities.stream()
+                    .map(e -> modelMapper.map(e, EmployeeDTO.class))
+                    .toList();
+        }
+
+        return new ArrayList<EmployeeDTO>();
+    }
+
+    public List<EmployeeDTO> getEmployeesSortedWithMultipleFields(String sortBy, String direction) {
+
+        validateValidField(sortBy);
+
+        Sort.Direction direction1 = direction.equalsIgnoreCase("asc") ? Sort.Direction.ASC : Sort.Direction.DESC;
+        Sort sort = Sort.by(direction1,sortBy)
+                .and(Sort.by("email"))
+                .and(Sort.by(Sort.Direction.DESC, "age"));
+
+        List<EmployeeEntity> employeeEntities = employeeRepository.findAll(sort);
+        if(!employeeEntities.isEmpty()) {
+            return employeeEntities.stream()
+                    .map(e -> modelMapper.map(e, EmployeeDTO.class))
+                    .toList();
+        }
+
+        return new ArrayList<EmployeeDTO>();
+    }
+
+    public void validateValidField(String sortBy){
+        List<String> fields = List.of("name" , "id", "age" , "dateOfJoining", "email", "phone");
+
+        if(!fields.contains(sortBy)){
+            throw new IllegalArgumentException("Invalid sort field : " + sortBy + " , valid fields are : " + fields);
+        }
+    }
 }
+
