@@ -43,5 +43,17 @@ public class MyNotes {
     but if we need to write incase
     use @Query -----> but in this we need to give table name same as java entity and everything is case-sensitive
 
+
+    ------------------ Sorting
+
+    for sorting we can pass fields in parameter using request param or not in controller as per demand
+    then in service class we can use sort class to fetch field name and their direction to sort
+    if not given by user then also we can add as our need for default sort
+
+    Sort.Direction direction1 = direction.equalsIgnoreCase("asc") ? Sort.Direction.ASC : Sort.Direction.DESC;
+        Sort sort = Sort.by(direction1,sortBy)
+                .and(Sort.by("email"))
+                .and(Sort.by(Sort.Direction.DESC, "age"));
+
      */
 }
