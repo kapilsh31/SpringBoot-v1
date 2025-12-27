@@ -13,6 +13,8 @@ import org.springframework.data.util.ReflectionUtils;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Field;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Slf4j
@@ -77,6 +79,9 @@ public class EmployeeService {
         existsById(id);
         EmployeeEntity employeeEntity = modelMapper.map(employeeDTO, EmployeeEntity.class);
         employeeEntity.setId(id);
+        if(employeeEntity.getCreationDate() == null) {
+            employeeEntity.setCreationDate(LocalDate.now());
+        }
         EmployeeEntity savedEntity = employeeRepository.save(employeeEntity);
         return modelMapper.map(savedEntity, EmployeeDTO.class);
     }

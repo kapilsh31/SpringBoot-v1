@@ -79,7 +79,33 @@ public class MyNotes {
 
      -------------------- Pagination
 
+     Sort.Direction direction1 = direction.equalsIgnoreCase("asc") ? Sort.Direction.ASC : Sort.Direction.DESC;
+        Sort sort = Sort.by(direction1,sortBy)
+                .and(Sort.by("email"))
+                .and(Sort.by(Sort.Direction.DESC, "age"));
 
+        Pageable pageable = PageRequest.of(pageNumber,PAGE_SIZE,sort);
+
+        List<EmployeeEntity> employeeEntities = employeeRepository.findAll(pageable).getContent();
+
+
+        in this way we can achieve pagination
+
+
+
+        ------------------------- Auditing
+
+
+        1. create auditable base entity using @EntityListeners(AuditingEntityListeners.class)
+        2. By above we get access for @CreatedBy, @CreatedDate, @LastModifiedBy and @LastModifiedDate
+        3. Extend the above class to all entities
+        4. Add @EnableJPAAuditing in configuration class -- till now our created and modified date will come
+        5. To get the user, We need to create class which implements AuditorAware Interface to provide current authenticated user
+            from spring security
+        6. If we do not want to use above configuration then we need to use these three annotations and do write our service or business
+           logic in it
+              * @PrePersist  **@PreUpdate ***@PreRemove
+              these annotations we can use in Entity class also
 
      */
 }

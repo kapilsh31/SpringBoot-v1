@@ -5,6 +5,7 @@ import jakarta.validation.constraints.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -39,5 +40,13 @@ public class EmployeeDTO {
     private Double salary;
 
     private boolean statusActive;
+
+    private LocalDateTime createdDate;
+
+    private LocalDateTime lastModifiedDate;
+
+    private  String createdBy;
+
+    private String lastModifiedBy;
 
 }
