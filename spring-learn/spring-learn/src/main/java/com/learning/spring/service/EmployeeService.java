@@ -6,6 +6,8 @@ import com.learning.spring.exceptions.ResourceNotFoundException;
 import com.learning.spring.repository.EmployeeRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.util.ReflectionUtils;
 import org.springframework.stereotype.Service;
@@ -17,6 +19,7 @@ import java.util.*;
 @Service
 public class EmployeeService {
 
+    private final Integer PAGE_SIZE = 4;
     private final EmployeeRepository employeeRepository;
     private final ModelMapper modelMapper;
 
@@ -163,6 +166,26 @@ public class EmployeeService {
         if(!fields.contains(sortBy)){
             throw new IllegalArgumentException("Invalid sort field : " + sortBy + " , valid fields are : " + fields);
         }
+    }
+
+    public List<EmployeeDTO> getEmployeesSortedAndPaginated(String sortBy, String direction, Integer pageNumber) {
+        validateValidField(sortBy);
+
+        Sort.Direction direction1 = direction.equalsIgnoreCase("asc") ? Sort.Direction.ASC : Sort.Direction.DESC;
+        Sort sort = Sort.by(direction1,sortBy)
+                .and(Sort.by("email"))
+                .and(Sort.by(Sort.Direction.DESC, "age"));
+
+        Pageable pageable = PageRequest.of(pageNumber,PAGE_SIZE,sort);
+
+        List<EmployeeEntity> employeeEntities = employeeRepository.findAll(pageable).getContent();
+        if(!employeeEntities.isEmpty()) {
+            return employeeEntities.stream()
+                    .map(e -> modelMapper.map(e, EmployeeDTO.class))
+                    .toList();
+        }
+
+        return new ArrayList<EmployeeDTO>();
     }
 }
 

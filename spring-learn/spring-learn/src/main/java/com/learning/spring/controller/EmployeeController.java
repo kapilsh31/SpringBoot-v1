@@ -46,6 +46,14 @@ public class EmployeeController {
         return !employeeDTO.isEmpty() ? ResponseEntity.ok(employeeDTO) : ResponseEntity.notFound().build();
     }
 
+    @GetMapping("/sort-page")
+    public ResponseEntity<List<EmployeeDTO>> getEmployeesSortedAndPaginated(@RequestParam(defaultValue = "id") String sortBy ,
+                                                                            @RequestParam(defaultValue = "asc") String direction,
+                                                                            @RequestParam(defaultValue = "0") Integer pageNumber){
+        List<EmployeeDTO> employeeDTO = employeeService.getEmployeesSortedAndPaginated(sortBy,direction,pageNumber);
+        return !employeeDTO.isEmpty() ? ResponseEntity.ok(employeeDTO) : ResponseEntity.notFound().build();
+    }
+
     @GetMapping("/by-name-email")
     public ResponseEntity<EmployeeDTO> getEmployeeByNameAndEmail(@RequestParam String name, @RequestParam String email){
         EmployeeDTO employeeDTO = employeeService.getEmployeeByNameAndEmail(name, email);

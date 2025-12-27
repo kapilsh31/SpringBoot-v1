@@ -43,6 +43,27 @@ public class MyNotes {
     but if we need to write incase
     use @Query -----> but in this we need to give table name same as java entity and everything is case-sensitive
 
+    All of these behind there is Entity Manager :
+    --- we create object in heap memory it is called Transient state
+    --- when we call save(), persist(), update() methods then it is called Persistent state
+    --- when we call get(), load() also then still it is in Persistent state
+    --- but when we call remove() or delete() method then it is called Removed State
+    --- also we call detach(), close(), clear() then it went to Detach() State but in this we can go again in Persistent state
+        by calling save(), merge() , lock() we again go to Persistent() state but in other we can't go to
+
+
+
+    If we call  persist() method on repository then we are in persistent context so we call same thing again nd again after making two
+    different object hibernate run the query every time so to overcome this we have to annotate our method with @Transactional
+    annotation , then we are in transactional context and now if we call same query hibernate run only 1 time
+
+    also,,,,,
+    let make a findById call..
+    ...first check data is in persistence context or not if there then fetch else call a select call
+    ... then store and return
+    ... but after then if you set or remove any attribute from entity then also it perform operation if it is in
+    ...Transaction context
+
 
     ------------------ Sorting
 
@@ -54,6 +75,11 @@ public class MyNotes {
         Sort sort = Sort.by(direction1,sortBy)
                 .and(Sort.by("email"))
                 .and(Sort.by(Sort.Direction.DESC, "age"));
+
+
+     -------------------- Pagination
+
+
 
      */
 }
