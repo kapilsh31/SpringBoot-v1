@@ -107,5 +107,50 @@ public class MyNotes {
               * @PrePersist  **@PreUpdate ***@PreRemove
               these annotations we can use in Entity class also
 
+
+
+      --------------------- Swagger and Open Api
+
+      to use swagger and open api ,
+      first we need to inject dependency :
+
+      <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+            <version>2.2.0</version>
+        </dependency>
+
+       then we can access swagger and open api page using below urls:
+
+       http://localhost:8080/swagger-ui/index.html
+       http://localhost:8080/v3/api-docs
+
+
+       ----------------- Actuator
+
+       to use actuator
+       we need to add following dependency
+
+       <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+
+        then we can add following properties in app.prop/yml files i.e. Optional
+
+        management.endpoints.web.exposure.include=*
+        management.info.env.enabled=true
+        info.app.author=kapil
+        info.app.version = 1.0.0
+        management.info.java.enabled=true
+        management.info.os.enabled=true
+        # to change base path of actuator currently it is /actuator
+        #management.endpoints.web.base-path=/managemant
+
+        also there are other things
+        main url:
+        http://localhost:8080/actuator/*
+
+
      */
 }
