@@ -149,7 +149,36 @@ public class MyNotes {
 
         also there are other things
         main url:
-        http://localhost:8080/actuator/*
+        http://localhost:8080/actuator
+
+
+
+       ---------------------------------- Spring Security
+
+        Authentication -- verifying the identity i.e. is it you
+        Authorization -- verifying that you have the specific roles to access specific thing
+
+        1. So first we need to  add the spring security dependency
+          --- in spring boot
+              SecurityFilterAutoConfiguration automatically register the DelegatingFilterProxy filter with
+              springSecurityFilterChain
+
+        2. after then when we hit request it reaches to DelegatingFilterProxy, Spring delegate the processing to
+        -- FilterChainProxy bean where it utilizes the SecurityFilterChain to execute the all list of filters to be invoked
+        -- for the current request.
+
+        3. Default things provided by Spring security dependency::::
+
+          a. Creates a bean springSecurityFilterChain and register filter with a bean with servlet for every request
+          b. HTTP basic auth and authorization request made with remoting protocols
+          c. Generate default login form
+          d. Create default username and password that is logged in console
+          e. Protects password from Bcrypt
+          f. Enable logout feature
+          g. other features like CSRF, session fixation etc
+
+
+
 
 
      */

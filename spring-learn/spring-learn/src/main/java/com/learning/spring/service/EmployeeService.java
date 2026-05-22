@@ -72,7 +72,7 @@ public class EmployeeService {
 
     private void existsById(Long id) {
         boolean exists = employeeRepository.existsById(id);
-        if(!exists) throw new ResourceNotFoundException("Employee not found with id : " + id);
+        if(!exists) throw new ResourceNotFoundException("EMPLOYEE_NOT_FOUND" + id);
     }
 
     public EmployeeDTO updateEmployeesById(Long id, EmployeeDTO employeeDTO) {
